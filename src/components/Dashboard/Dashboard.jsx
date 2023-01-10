@@ -18,7 +18,6 @@ import DTH from "../../images/DTH/Group 5.png";
 import Fastag from "../../images/Fastag/Group 5.png";
 import EMI from "../../images/EMI/Group 5.png";
 import swal from "sweetalert";
-import ModaladdMoney from "../../utils/ModaladdMoney";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -31,6 +30,15 @@ const Dashboard = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  useEffect(() => {
+    if (sessionStorage.getItem("client") === "clientLoggedIn") {
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function (event) {
+        window.history.go(1);
+        window.location.reload();
+      };
+    }
+  });
 
   const [clientdata, setClientData] = useState();
   let clientCode = sessionStorage.getItem("clientCode");

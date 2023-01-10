@@ -84,7 +84,7 @@ const DthTransactions = () => {
     loader.classList.remove("d-none");
     setTimeout(() => {
       loader.classList.add("d-none");
-    }, 500  );
+    }, 500);
     document.getElementById("refid").value = null;
     document.getElementById("mobile").value = null;
     document.getElementById("rechargestatus").value = null;
@@ -108,6 +108,7 @@ const DthTransactions = () => {
       (res) => {
         loader.classList.add("d-none");
         setTransactionData(res?.result);
+        setTotalRows(res?.result?.length);
       },
       (err) => {
         console.log(err);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/GR_tech_logo/GRTECH PAYMENT Final-2.png";
 import { resendOtp, VerifyOtp } from "../../networkcalls/ClientApi";
@@ -27,7 +27,7 @@ const OtpVerification = () => {
       }
     );
   };
-
+  
   const verify = async (e) => {
     e.preventDefault();
     let data = { mobile, otp };
@@ -41,7 +41,7 @@ const OtpVerification = () => {
         let panVerify = sessionStorage.getItem("panVerify");
 
         if (res.status === 200) {
-          localStorage.setItem("client", "clientLogedIn");
+          sessionStorage.setItem("client", "clientLoggedIn");
           setLoading(false);
           swal(`OTP Verified!`, res.message, "success").then((willdelete) => {
             if (willdelete) {

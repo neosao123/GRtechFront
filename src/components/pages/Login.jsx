@@ -84,8 +84,9 @@ const Login = () => {
                   type="number"
                   autoComplete="false"
                   className="form-control form-control"
-                  placeholder="Example:. 9091929394"
+                  placeholder="Example:. 9999988888"
                   id="mobile"
+                  autoFocus
                   value={data?.mobile}
                   onChange={(e) => handleChange(e)}
                 />
@@ -97,7 +98,7 @@ const Login = () => {
                   type="number"
                   autoComplete="false"
                   className="form-control form-control"
-                  placeholder="Example:. 9091929394"
+                  placeholder="Example:. 9999988888"
                   id="refmobile"
                   value={data?.refmobile}
                   onChange={(e) => handleChange(e)}

@@ -90,6 +90,7 @@ const MobileTransaction = () => {
       (res) => {
         loader.classList.add("d-none");
         setData(res?.result);
+        setTotalRows(res?.result?.length);
       },
       (err) => {
         console.log(err);
@@ -98,6 +99,10 @@ const MobileTransaction = () => {
   }
 
   function handleClear(e) {
+    loader.classList.remove("d-none");
+    setTimeout(() => {
+      loader.classList.add("d-none");
+    }, 500);
     e.preventDefault();
     document.getElementById("refid").value = null;
     document.getElementById("mobile").value = null;

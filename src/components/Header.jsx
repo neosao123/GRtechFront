@@ -9,17 +9,16 @@ import useCookies from "react-cookie/cjs/useCookies";
 const Header = () => {
   const [cookie, setCookie] = useCookies(["token"]);
   let navigate = useNavigate();
-  let path = useLocation();
   function onhandleClick() {
     sessionStorage.clear();
-    localStorage.clear();
+
     setCookie("token", "", { path: "/" });
     navigate("/");
   }
   useEffect(() => {
     if (
-      localStorage.getItem("client") === null ||
-      localStorage.getItem("client") === ""
+      sessionStorage.getItem("client") === null ||
+      sessionStorage.getItem("client") === ""
     ) {
       navigate("/");
     }
@@ -344,9 +343,20 @@ const Header = () => {
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Text
-                    </a>
+                    <Link
+                      to="/mobile/transactions"
+                      className="dropdown-item"
+                      href="#"
+                    >
+                      Mobile Transactions
+                    </Link>
+                    <Link
+                      to="/dth/transactions"
+                      className="dropdown-item"
+                      href="#"
+                    >
+                      DTH Transactions
+                    </Link>
                   </li>
                 </ul>
               </li>

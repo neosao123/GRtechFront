@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 import Select, { components } from "react-select";
 import swal from "sweetalert";
@@ -10,6 +11,8 @@ import {
 } from "../../networkcalls/dthApi";
 import ViewPlans from "../Mobile Recharge/ViewPlans";
 import ViewDthPlans from "./ViewDthPlans";
+import { Button, Form, Modal } from "react-bootstrap";
+
 const { Option } = components;
 
 function IconOption(props) {
@@ -40,6 +43,10 @@ const Dth = () => {
   const [canumberErr, setCaNumberErr] = useState();
   const [operatorErr, setOperatorErr] = useState();
   const [validate, setValidate] = useState(false);
+  const [modalopen, setModalOpen] = useState(false);
+  const [rechargeResult, setRechargeResult] = useState();
+  const [show, setShow] = useState(false);
+
   // const [showInfo, setShowInfo] = useState(true);
   useEffect(() => {
     getdthcircle().then(
@@ -61,9 +68,7 @@ const Dth = () => {
         console.log(err);
       }
     );
-  }, []);
 
-  useEffect(() => {
     getdthoperator().then((data) => {
       var result = data.result;
       var operatorsLive = [];
@@ -81,6 +86,12 @@ const Dth = () => {
       setOperatorList(operatorsLive);
     });
   }, []);
+
+  function handleClose() {
+    window.location.reload();
+    setShow(false);
+  }
+
   function handleCircle(e) {
     setSelectedCircle(e);
   }
@@ -96,21 +107,30 @@ const Dth = () => {
       operator: selectedOprator?.value,
     };
     console.log(data);
-    // if(!/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(data.canumber)){
-    //   setValidate(false);
-    //   setCaNumberErr("Please enter Number");
-    // }
-    if (data.canumber === undefined && data.operator === undefined) {
+
+    if (
+      data.canumber === undefined ||
+      data.canumber === "" ||
+      data.canumber.length < 10 ||
+      !/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(data.canumber)
+    ) {
+      setCaNumberErr("Please enter 10 digit number");
       setValidate(false);
-      setCaNumberErr("Please enter registered mobile number or subscriber Id");
+    }
+    if (data.operator === undefined || data.operator === "") {
+      setValidate(false);
       setOperatorErr("Please select operator");
-    } else {
-      setCaNumberErr("");
+    }
+    if (
+      data.operator !== undefined &&
+      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(data.canumber)
+    ) {
       setOperatorErr("");
+      setCaNumberErr("");
+      setValidate(true);
       loader.classList.remove("d-none");
       getdthinfo(data).then(
         (res) => {
-          setValidate(true);
           loader.classList.add("d-none");
           setInfo(res.result[0]);
         },
@@ -138,11 +158,15 @@ const Dth = () => {
         console.log(res);
         loader.classList.add("d-none");
         if (res.status === 200) {
-          swal("Recharge Done", res.message, "success").then((res) => {
-            if (res) {
-              window.location.reload();
-            }
-          });
+          setModalOpen(true);
+          setShow(true);
+          setRechargeResult(res.result);
+          console.log(res);
+          // swal("Recharge Done", res.message, "success").then((res) => {
+          //   if (res) {
+          //     window.location.reload();
+          //   }
+          // });
         } else if (res.status === 300) {
           swal("Error", res.message, "warning");
         }
@@ -161,7 +185,7 @@ const Dth = () => {
         <div className="col-md-6 col-6 text-end">
           <Link
             className="text-success border border-success rounded-2 p-2"
-            to="/dth/trasactions"
+            to="/dth/transactions"
             style={{ textDecoration: "none", cursor: "pointer" }}
           >
             Transactions
@@ -180,30 +204,71 @@ const Dth = () => {
           >
             <div className="mb-3">
               <label>Operator</label>
-              <Select
-                options={operatorList}
-                components={{ Option: IconOption }}
-                placeholder="Select Operator"
-                className="text-start"
-                value={operatorList?.find(
-                  (obj) => obj.value === selectedOprator
-                )}
-                onChange={handleOperator}
-              />
-              <span className="text-danger">{operatorErr}</span>
+
+              {validate === true ? (
+                <>
+                  <Select
+                    options={operatorList}
+                    components={{ Option: IconOption }}
+                    isDisabled="true"
+                    placeholder={
+                      <div className="select-placeholder-text">
+                        Select options
+                      </div>
+                    }
+                    className="text-start"
+                    value={operatorList?.find(
+                      (obj) => obj.value === selectedOprator
+                    )}
+                    onChange={handleOperator}
+                  />
+                </>
+              ) : (
+                <>
+                  <Select
+                    options={operatorList}
+                    components={{ Option: IconOption }}
+                    placeholder={
+                      <div className="select-placeholder-text">
+                        Select options
+                      </div>
+                    }
+                    className="text-start"
+                    value={operatorList?.find(
+                      (obj) => obj.value === selectedOprator
+                    )}
+                    onChange={handleOperator}
+                  />
+                  <span className="text-danger">{operatorErr}</span>
+                </>
+              )}
             </div>
 
             <div className="mb-3">
               <label>Enter Reg. Mobile/ Sub. Id</label>
-              <input
-                type="number"
-                id="canumber"
-                placeholder="Registered Mobile Number / Subscriber Id"
-                className="form-control"
-                value={canumber}
-                onChange={(e) => setCanumber(e.target.value)}
-              />
-              <span className="text-danger">{canumberErr}</span>
+              {validate === true ? (
+                <input
+                  type="number"
+                  id="canumber"
+                  disabled="disabled"
+                  placeholder="Registered Mobile Number / Subscriber Id"
+                  className="form-control"
+                  value={canumber}
+                  onChange={(e) => setCanumber(e.target.value)}
+                />
+              ) : (
+                <>
+                  <input
+                    type="number"
+                    id="canumber"
+                    placeholder="Registered Mobile Number / Subscriber Id"
+                    className="form-control"
+                    value={canumber}
+                    onChange={(e) => setCanumber(e.target.value)}
+                  />
+                  <span className="text-danger">{canumberErr}</span>
+                </>
+              )}
             </div>
             {open && validate === true ? (
               <div></div>
@@ -223,7 +288,7 @@ const Dth = () => {
               <Select
                 options={circleList}
                 className="text-start"
-                placeholder="Select Circle"
+                 placeholder={<div className="select-placeholder-text">Select options</div>} 
                 value={circleList?.find((obj) => obj.value === selectedCircle)}
                 onChange={handleCircle}
                 isSearchable={true}
@@ -247,6 +312,51 @@ const Dth = () => {
                   >
                     Proceed To Recharge
                   </button>
+                  <br />
+                  <br />
+                  <p
+                    className="text-primary text-end pe-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={(e) => window.location.reload(e)}
+                  >
+                    Reset
+                  </p>
+                  {modalopen ? (
+                    <>
+                      <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                          <Modal.Title className="text-success">
+                            Recharge Success!
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <div className="container">
+                            <div className="row">
+                              <p>{rechargeResult.message}</p>
+
+                              <p>
+                                {" "}
+                                <strong> Operator Id:</strong>{" "}
+                                {rechargeResult.operatorid}
+                              </p>
+
+                              <p>
+                                <strong> Refference Id:</strong>{" "}
+                                {rechargeResult.refid}
+                              </p>
+                            </div>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </>
             ) : (

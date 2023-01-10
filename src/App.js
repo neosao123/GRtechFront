@@ -129,7 +129,7 @@ function App() {
           }
         />
         <Route
-          path="/mobile/trasactions"
+          path="/mobile/transactions"
           element={
             <>
               <Header />
@@ -138,7 +138,7 @@ function App() {
           }
         />
         <Route
-          path="/dth/trasactions"
+          path="/dth/transactions"
           element={
             <>
               <Header />

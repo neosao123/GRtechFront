@@ -172,7 +172,6 @@ body {
   background-color: #fbfbfb;
   opacity: 0.9;
   -webkit-filter: blur(0.9);
-  
   z-index: 999;
 }
 
@@ -182,4 +181,20 @@ body {
   border-radius: 50%;
   object-fit: fill;
   margin-right: 15px;
+}
+::placeholder {
+  color: #bebebe !important;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #bebebe !important;
+  opacity: 1;
+}
+::-ms-input-placeholder {
+  color: #bebebe !important;
+  opacity: 1;
+}
+.select-placeholder-text {
+  color: #bebebe !important;
+  opacity: 1;
 }

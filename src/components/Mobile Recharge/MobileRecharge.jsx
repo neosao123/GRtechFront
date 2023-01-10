@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import {
   browseplan,
@@ -11,6 +10,7 @@ import {
 import Select, { components } from "react-select";
 import ModalSearch from "../../utils/ModalSearch";
 import swal from "sweetalert";
+import { Button, Modal } from "react-bootstrap";
 
 const { Option } = components;
 
@@ -31,9 +31,7 @@ function IconOption(props) {
 
 const MobileRecharge = () => {
   const [selectedOprator, setSelectedOprator] = useState();
-  const [operator, setOpenOPerator] = useState(false);
   const [operatorList, setOperatorList] = useState();
-  const [opencircle, setOpenCircle] = useState(false);
   const [selectedCircle, setSelectedCircle] = useState();
   const [circleList, setCircleList] = useState();
   const loader = document.querySelector("div.loader");
@@ -53,8 +51,19 @@ const MobileRecharge = () => {
   const [operatorId, setOperatorId] = useState();
   const [object, setObject] = useState();
   const [BrowseDataResponse, setBrowseDataResponse] = useState(null);
-
+  const [modalopen, setModalOpen] = useState(false);
   const [styles, setStyles] = useState("");
+  const [show, setShow] = useState(false);
+  const [rechargeResult, setRechargeResult] = useState();
+  const handleClose = () => {
+    window.location.reload();
+    setShow(false);
+    // window.location.reload();
+  };
+
+  const handleShow = (e) => {
+    e.preventDefault();
+  };
 
   useEffect(() => {
     getOprator().then((data) => {
@@ -117,6 +126,39 @@ const MobileRecharge = () => {
     setSelectedCircle(e);
   }
 
+  const handleMobileNumber = (e) => {
+    let mounted = true;
+    if (
+      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
+        data.mobileNumber
+      )
+    ) {
+      if (data.mobileNumber.length === 10) {
+        setloading(true);
+        loader.classList.remove("d-none");
+
+        // message.innerHTML = `<h3>Geting Circle and Operator</h3>`;
+        getPhoneInfo(data).then(
+          (res) => {
+            loader.classList.add("d-none");
+            setResult(res.result[0]);
+            setSelectedOprator(res.result[0].operator);
+            setSelectedCircle(res.result[0].circle);
+            setloading(false);
+            mounted = false;
+          },
+          (err) => {
+            mounted = false;
+            console.log(err);
+          }
+        );
+      }
+      return function cleanup() {
+        mounted = false;
+      };
+    }
+  };
+
   const handleChange = (e) => {
     const newData = { ...data };
     newData[e.target.id] = e.target.value;
@@ -124,52 +166,34 @@ const MobileRecharge = () => {
   };
 
   useEffect(() => {
-    let mounted = true;
     setMobileError("");
     setCircleError("");
     setOptError("");
     setAmountErr("");
-    if (
-      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
-        data.mobileNumber
-      )
-    ) {
-      setloading(true);
-      loader.classList.remove("d-none");
-
-      // message.innerHTML = `<h3>Geting Circle and Operator</h3>`;
-      getPhoneInfo(data).then(
-        (res) => {
-          loader.classList.add("d-none");
-          setResult(res.result[0]);
-          setSelectedOprator(res.result[0].operator);
-          setSelectedCircle(res.result[0].circle);
-          setloading(false);
-          mounted = false;
-        },
-        (err) => {
-          mounted = false;
-          console.log(err);
-        }
-      );
-    }
-
-    return function cleanup() {
-      mounted = false;
-    };
   }, [data]);
 
-  const onClickHandle = () => {
+  const dataFromSearch = (e) => {
+    setAmount(e.target.getAttribute("data-amount"));
+    setTalkTimeDesc(e.target.getAttribute("data-desc"));
+  };
+
+  const handleViewPlans = () => {
+    var selOpr = operatorList.filter((operator) => {
+      if (operator.value === result.operator) {
+        return operator;
+      }
+    });
+    if (selOpr.length > 0 && selOpr !== null) {
+      var opr = selOpr[0];
+      setOperatorId(opr.id);
+    }
     setOpen(true);
     let browsedata = {
       circle: result.circle,
       operator: result.operator,
       mobileNumber: data.mobileNumber,
     };
-    // console.log();
-    // console.log(operatorList);
-    // console.log("object", object);q
-    // console.log(browsedata.operator);
+
     if (
       browsedata.circle === undefined &&
       browsedata.operator === undefined &&
@@ -179,7 +203,6 @@ const MobileRecharge = () => {
       setMobileError("Please enter mobile number");
       setOptError("Please select operator");
       setCircleError("Please select cricle");
-      // setAmountErr("Please enter amount");
     } else {
       setValidate(true);
       loader.classList.remove("d-none");
@@ -197,7 +220,17 @@ const MobileRecharge = () => {
     }
   };
 
-  const handlePlanAmount = (rs, talkTimedescription) => {
+  const handlePlanAmount = (rs, talkTimedescription, index1, index) => {
+    let concat = "pl-" + index + "-" + index1;
+
+    const boxes = document.querySelectorAll("button.chbtn");
+    boxes.forEach((box) => {
+      box.classList.remove("btn-success");
+      box.classList.remove("text-white");
+    });
+    document
+      .querySelector("button[id='" + concat + "']")
+      .classList.add("btn-success", "text-white");
     setAmount(rs);
     setTalkTimeDesc(talkTimedescription);
   };
@@ -210,11 +243,11 @@ const MobileRecharge = () => {
     e.preventDefault();
     let rechargeData = {
       mobileNumber: data.mobileNumber,
-      mobileoperator: selectedOprator,
+      mobileoperator: operatorId,
       rechargeamount: amount,
       clientCode: clientCode,
       rechargeplan: talkTimedesc,
-      servicecode: "SER_7",
+      // servicecode: "SER_7",
     };
 
     if (rechargeData.mobileNumber === "") {
@@ -230,26 +263,33 @@ const MobileRecharge = () => {
       rechargeData.rechargeplan === undefined
     ) {
       rechargeValidate = false;
-      setAmountErr("Please select amount");
+      setAmountErr("Please select plan amount");
     }
 
     if (rechargeValidate) {
+      setModalOpen(false);
       setAmountErr("");
       loader.classList.remove("d-none");
       // message.innerHTML = `<h3>Recharge in progress</h3>`;
       setRechargeLoading(true);
+
       mobileReacharge(rechargeData).then(
         (res) => {
           console.log(res);
           if (res.status === 300) {
+            setModalOpen(true);
             setRechargeLoading(false);
             loader.classList.add("d-none");
             swal("Please Try Later", res.message, "warning");
           }
           if (res.status === 200) {
-            swal("Recharge done!", res.message, "success").then((res) => {
-              if (res) loader.classList.add("d-none");
-            });
+            loader.classList.add("d-none");
+            setModalOpen(true);
+            setShow(true);
+            setRechargeResult(res.result);
+            // swal("Recharge done!", res.message, "success").then((res) => {
+            //   if (res) loader.classList.add("d-none");
+            // });
           }
         },
         (err) => {
@@ -269,7 +309,7 @@ const MobileRecharge = () => {
           <div className="col-md-6 col-6 text-end">
             <Link
               className="text-success border border-success rounded-2 p-2"
-              to="/mobile/trasactions"
+              to="/mobile/transactions"
               style={{ textDecoration: "none", cursor: "pointer" }}
             >
               Transactions
@@ -296,8 +336,10 @@ const MobileRecharge = () => {
                   type="text"
                   id="mobileNumber"
                   value={data.mobileNumber}
+                  autoFocus
                   onChange={(e) => handleChange(e)}
-                  placeholder="Example:. 9091929394"
+                  onKeyUp={(e) => handleMobileNumber(e)}
+                  placeholder="Example:. 9999988888"
                   className="form-control"
                 />
                 <div className="text-danger">{mobileError}</div>
@@ -309,7 +351,11 @@ const MobileRecharge = () => {
                 <Select
                   options={operatorList}
                   components={{ Option: IconOption }}
-                  placeholder="Select option"
+                  placeholder={
+                    <div className="select-placeholder-text">
+                      Select options
+                    </div>
+                  }
                   className="text-start"
                   value={operatorList?.find(
                     (obj) => obj.value === selectedOprator
@@ -326,7 +372,11 @@ const MobileRecharge = () => {
                 <Select
                   options={circleList}
                   className="text-start"
-                  placeholder="Select option"
+                  placeholder={
+                    <div className="select-placeholder-text">
+                      Select options
+                    </div>
+                  }
                   value={circleList?.find(
                     (obj) => obj.value === selectedCircle
                   )}
@@ -351,7 +401,7 @@ const MobileRecharge = () => {
                     type="button"
                     className="border-0 rounded-2 text-white"
                     style={{ backgroundColor: "#3d24f5" }}
-                    onClick={onClickHandle}
+                    onClick={handleViewPlans}
                   >
                     View Plans
                   </button>
@@ -366,6 +416,42 @@ const MobileRecharge = () => {
                 >
                   Proceed To Recharge
                 </button>
+                {modalopen ? (
+                  <>
+                    <Modal show={show} onHide={handleClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title className="text-success">
+                          Recharge Success!
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <div className="container">
+                          <div className="row">
+                            <p>{rechargeResult.message}</p>
+
+                            <p>
+                              {" "}
+                              <strong> Operator Id:</strong>{" "}
+                              {rechargeResult.operatorid}
+                            </p>
+
+                            <p>
+                              <strong> Refference Id:</strong>{" "}
+                              {rechargeResult.refid}
+                            </p>
+                          </div>
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
             </form>
           </div>
@@ -380,10 +466,14 @@ const MobileRecharge = () => {
               >
                 <div className="card-body">
                   <div className="row mt-3 mb-3">
-                    <div className="col-lg-5">
-                      <h5 className="text-success">
-                        View Plans &nbsp; &nbsp; <ModalSearch />
-                      </h5>
+                    <div className="col-lg-3">
+                      <h5 className="text-success">Reacharge Plans</h5>
+                    </div>
+                    <div className="col-lg-6 ">
+                      <ModalSearch
+                        BrowseDataResponse={BrowseDataResponse}
+                        dataFromSearch={dataFromSearch}
+                      />
                     </div>
                   </div>
                   <hr />
@@ -456,11 +546,16 @@ const MobileRecharge = () => {
                                         <div className="col-md-2 col-sm-2 col-2 mt-3">
                                           {" "}
                                           <button
-                                            className="btn btn-outline-success"
+                                            className={
+                                              "chbtn btn btn-outline-success"
+                                            }
+                                            id={"pl-" + index + "-" + index1}
                                             onClick={(e) =>
                                               handlePlanAmount(
                                                 tabPlan.rs,
-                                                tabPlan.desc
+                                                tabPlan.desc,
+                                                index1,
+                                                index
                                               )
                                             }
                                           >
