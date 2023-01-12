@@ -17,148 +17,168 @@ const MyProfile = () => {
       }
     );
   }, []);
-
+  //circle-pro
   return (
     <div>
       <div className="container">
-        <div className="row mt-5 mb-5">
-          <div className="col-md-3">
-            <div className="card rounded-4 depth">
-              <img
-                className="circle-pro mx-auto  img-fluid mt-3"
-                src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
-                alt="..."
-              />
-              <h4 className="text-center mt-2">{userData?.fullname}</h4>
+        {/* row distributed 3 + me-4 + 8 */}
+        <div className="row g-0 ">
+          <div className="col-md-3 col-12 mt-3 me-4 card myprofile">
+            <img
+              src={
+                // !null
+                //   ? userData.profilePhoto
+                "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+              }
+              className="img-fluid rounded-circle ps-5 pe-5 pt-3 pb-3"
+              style={{ height: "auto", width: "auto" }}
+              alt="client image"
+            />
+            <div className="">
+              <div className="text-center mb-2">
+                {" "}
+                <b>{userData.fullname}</b>{" "}
+              </div>
 
-              <div className="card-body">
-                <div className="text-center d-grid">
-                  <b className="text-success cursorPointer">
-                    Become a Retailer
-                  </b>{" "}
-                  <hr />
-                  <br />
-                  <button className="btn gradient_class rounded-pill">
-                    Update Profile
-                  </button>
-                  <br />
-                  <button className="btn gradient_class rounded-pill">
-                    Logout
-                  </button>
-                  <br />​
-                </div>
+              <div className="text-center">
+                <h6 className="text-muted">{userData.clienttype}</h6>
+              </div>
+              <div className="text-center mb-3">
+                <h6 className="text-success">
+                  Wallet Balance: <strong> Rs.100/-</strong>
+                </h6>
+              </div>
+              <div className="text-center mb-3">
+                <button className="btn btn-success btn-sm">
+                  {" "}
+                  Beacome a retailer
+                </button>
               </div>
             </div>
           </div>
-          <div className="col-md-9 card rounded-4 depth">
-            <div className="">
-              <div className="card-body">
-                <div className="row mb-5">
-                  <div className="col-md-12">
-                    <div className="text-layout ps-3">
-                      <h6>Personal Details</h6>
-                    </div>
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="fullname">FullName:</label>
-                    <br />
-                    <input
-                      className="form-control"
-                      value={userData?.fullname}
-                      type="text"
-                    />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="phoneno">PhoneNo:</label>
-                    <br />
-                    <input
-                      className="form-control"
-                      value={userData.mobile}
-                      type="text"
-                    />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="email">Email:</label>
-                    <br />
-                    <input
-                      className="form-control"
-                      value={userData.email}
-                      type="text"
-                    />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="qualification">Qualification:</label>
-                    <br />
-                    <input
-                      className="form-control"
-                      value={userData.qualification}
-                      type="text"
-                    />
-                  </div>
-                  <div className="col-md-12 mt-3">
-                    <div className="text-layout ps-3 ">
-                      <h6>Address Details</h6>
-                    </div>
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="fullname">House No:</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="phoneno">City</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="email">State</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="qualification">StreetName</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="qualification">Pin Code</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-12 mt-3">
-                    <div className="text-layout ps-3">
-                      <h6>Bank Details</h6>
-                    </div>
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="fullname">Adhar No</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="phoneno">PAN No</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="email">Bank Name</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="col-md-6 mt-2">
-                    <label htmlFor="qualification">IFSC code</label>
-                    <br />
-                    <input className="form-control" value="" type="text" />
-                  </div>
-                  <div className="row mt-3">
-                    <div className="col-md-3">
-                      <button className="btn gradient_class" type="button">
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                </div>
+
+          <div className="col-md-8 col-12 mt-3 card myprofile">
+            <div className="row pt-4 ps-4">
+              <div className="col-md-3 col-6">
+                <b> Full Name</b>
               </div>
+              <div className="col-md-6 col-6 text-muted">
+                {userData.fullname}
+              </div>
+            </div>
+            <hr className=" mt-4 " style={{ width: "95%", margin: "0 auto" }} />
+            <div className="row pt-4 ps-4">
+              <div className="col-md-3 col-6">
+                <b> Email</b>
+              </div>
+              <div className="col-md-6 col-6 text-muted">{userData.email}</div>
+            </div>
+            <hr className=" mt-4 " style={{ width: "95%", margin: "0 auto" }} />
+            <div className="row pt-4 ps-4">
+              <div className="col-md-3 col-6">
+                <b> Mobile Number</b>
+              </div>
+              <div className="col-md-6 col-6 text-muted">
+                {userData.mobileNumber}
+              </div>
+            </div>
+            <hr className=" mt-4 " style={{ width: "95%", margin: "0 auto" }} />
+            <div className="row pt-4 ps-4">
+              <div className="col-md-3 col-6">
+                <b> Address</b>
+              </div>
+              <div className="col-md-6 col-6 text-muted">
+                {userData.address}
+              </div>
+            </div>
+            <hr className=" mt-4 " style={{ width: "95%", margin: "0 auto" }} />
+            <div className="row pt-4 ps-4">
+              <div className="col-md-3 col-6">
+                <b> House No.</b>
+              </div>
+              <div className="col-md-6 col-6 text-muted">
+                {userData.houseno}
+              </div>
+            </div>
+            {/* <hr className=" mt-4 " style={{ width: "95%", margin: "0 auto" }} /> */}
+          </div>
+        </div>
+
+        <div className="row g-0 mt-4">
+          <div className="col-md-3 me-4 col-12 card myprofile p-4">
+            <Link
+              to="/dashboard/trasactions"
+              className="text-dark"
+              style={{ textDecoration: "none" }}
+            >
+              <div className="row">
+                <div className="col-md-3">
+                  <i class="fa-sharp fa-solid fa-list"></i>
+                </div>
+                <div className="col-md-6">Transaction List</div>
+              </div>
+            </Link>
+            <hr />
+            <div className="row">
+              <div className="col-md-3">
+                <i class="fa-sharp fa-solid fa-user"></i>
+              </div>
+              <div className="col-md-6">Update Profile</div>
+            </div>
+            <hr />
+            <div className="row">
+              <div className="col-md-3">
+                <i class="fa-sharp fa-solid fa-right-from-bracket"></i>
+              </div>
+              <div className="col-md-6">Logout</div>
+            </div>
+          </div>
+          <div className="col-md-4 me-4 card">
+            <div className="text-center p-2">
+              <b> Bank details</b>
+              <hr />
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
+            </div>
+          </div>
+          <div className="col-md-4 me-4 card">
+            <div className="text-center p-2">
+              <b> KYC details</b>
+              <hr />
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
+            </div>
+            <div className="row mb-2">
+              <div className="col-5 ps-5">
+                <b>Account No. :</b>
+              </div>
+              <div className="col-7">90068978325892</div>
             </div>
           </div>
         </div>

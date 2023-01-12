@@ -7,9 +7,15 @@ import { useNavigate } from "react-router-dom";
 const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
   let navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setSerchTerm("");
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
   const [searchTerm, setSerchTerm] = useState("");
+
   let datas = BrowseDataResponse;
   let bulkData = [];
   datas?.map((data) => {
@@ -25,7 +31,9 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
       bulkData?.push(all_response);
     });
   });
+
   function handleSelect(e) {
+    setSerchTerm("");
     setShow(false);
     const boxes = document.querySelectorAll("button.chbtn");
     boxes.forEach((box) => {
@@ -40,7 +48,7 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
 
   return (
     <>
-      <div className="  rounded-4" onClick={handleShow}>
+      <div className=" rounded-4" onClick={handleShow}>
         <div className=" mb-3">
           <input
             type="text"
@@ -50,13 +58,13 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
           />
         </div>
         {/* <div className="pt-2">
-          <i className="fa-solid fa-magnifying-glass"></i>
+          
         </div> */}
       </div>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Search Plans</Modal.Title>
+          <h5>Search Plans</h5>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -71,7 +79,7 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
               />
             </Form.Group>
           </Form>
-          <div className="card">
+          <div className="">
             {bulkData
               .filter((data) => {
                 if (searchTerm === "") {
@@ -79,19 +87,11 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
                 } else if (data?.rs?.includes(searchTerm.toLowerCase())) {
                   return data;
                 }
-                //  else if (
-                //   data?.Description?.includes(searchTerm)
-                // ) {
-                //   return data;
-                // }
-                // else if (data?.validity?.includes(searchTerm.toLowerCase())) {
-                //   return data;
-                // }
               })
               .map((data, key) => {
                 return (
                   <div
-                    className="card m-1 p-1 "
+                    className="card mb-3 p-3 "
                     style={{ cursor: "pointer" }}
                     onClick={(e) => key}
                     id={key}

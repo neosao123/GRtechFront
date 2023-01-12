@@ -71,7 +71,7 @@ const Profile = () => {
       },
     };
 
-    if (!profilephoto?.name?.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
+    if (!profilephoto?.name?.match(/\.(jpg|jpeg|png|gif|svg|jfif)$/)) {
       setImageErrorMessage("Please select valid image");
       validate = false;
     }

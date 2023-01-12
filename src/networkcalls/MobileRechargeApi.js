@@ -22,5 +22,7 @@ export const getCircle = async () => {
   const res = await axiosPrivate.get(`/client/getcircle`);
   return res.data;
 };
-
-
+export const retryMobileRecharge = async (data) => {
+  const res = await axiosPrivate.post(`/client/retrymobilerecharge`, data);
+  return res.data;
+};

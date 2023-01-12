@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import swal from "sweetalert";
+import { retryMobileRecharge } from "../../networkcalls/MobileRechargeApi";
 import { mobileTransactions } from "../../networkcalls/transactions";
 
 const MobileTransaction = () => {
@@ -14,8 +16,31 @@ const MobileTransaction = () => {
 
   const [totalRows, setTotalRows] = useState();
   const [perPage, setPerPage] = useState(10);
-
   let clientCode = sessionStorage.getItem("clientCode");
+
+  const handleRetryMobileRecharge = (e, referenceid) => {
+    let retryRechargeData = {
+      referenceid: referenceid,
+      clientCode: clientCode,
+    };
+    loader.classList.remove("d-none");
+
+    retryMobileRecharge(retryRechargeData).then(
+      (res) => {
+        loader.classList.add("d-none");
+        if (res.status === 200) {
+          swal("Success", res.message, "success").then((ok) => {
+            if (ok) {
+              window.location.reload();
+            }
+          });
+        } else {
+          swal("Failed", res.message, "warning");
+        }
+      },
+      (err) => {}
+    );
+  };
 
   const columns = [
     {
@@ -44,7 +69,24 @@ const MobileTransaction = () => {
     },
     {
       name: "Recharge Status",
-      selector: (row) => row.rechargeStatus,
+      selector: (row) =>
+        row.rechargeStatus === "success" ? (
+          <button
+            className="btn btn-sm btn-success"
+            onClick={(e) => handleRetryMobileRecharge(e, row.referenceId)}
+          >
+            Check Status
+          </button>
+        ) : (
+          <>
+            <button
+              className="btn btn-sm btn-success"
+              onClick={(e) => handleRetryMobileRecharge(e, row.referenceId)}
+            >
+              Check Status
+            </button>
+          </>
+        ),
     },
   ];
 

@@ -27,7 +27,7 @@ const OtpVerification = () => {
       }
     );
   };
-  
+
   const verify = async (e) => {
     e.preventDefault();
     let data = { mobile, otp };
@@ -75,8 +75,16 @@ const OtpVerification = () => {
           <div className="row g-0">
             <div className="col-lg-4"></div>
             <div className="col-lg-4 card rounded-3 p-4">
-              <div className="App mb-3 mt-3">
-                <img src={logo} alt="" style={{ height: "30px" }} />
+              <div className=" mb-3 mt-3">
+                <div
+                  className="btn btn-outline-success"
+                  onClick={(e) => navigate("/")}
+                >
+                  <i class="fa-sharp fa-solid fa-arrow-left"></i>
+                </div>
+                <div className="text-center">
+                  <img src={logo} alt="" style={{ height: "30px" }} />
+                </div>
               </div>
               <div className=" mt-3 mb-2">
                 <h5 className="">OTP Verification</h5>

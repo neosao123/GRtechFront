@@ -18,3 +18,7 @@ export const dthrecharge = async (data) => {
   let res = await axiosPrivate.post("/client/dthrecharge", data);
   return res.data;
 };
+export const retryDthRecharge = async (data) => {
+  let res = await axiosPrivate.post(`client/retrydthrecharge`, data);
+  return res.data;
+};

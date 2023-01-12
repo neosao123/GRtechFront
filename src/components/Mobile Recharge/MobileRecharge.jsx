@@ -68,7 +68,8 @@ const MobileRecharge = () => {
   useEffect(() => {
     getOprator().then((data) => {
       //console.log(data.result.map((data) => data.image));
-      var result = data.result;
+      var result = data?.result;
+      console.log(result);
       var operatorsLive = [];
       result.forEach((element) => {
         var nm = element.name.toLowerCase();
@@ -128,6 +129,7 @@ const MobileRecharge = () => {
 
   const handleMobileNumber = (e) => {
     let mounted = true;
+
     if (
       /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
         data.mobileNumber
@@ -143,6 +145,7 @@ const MobileRecharge = () => {
             loader.classList.add("d-none");
             setResult(res.result[0]);
             setSelectedOprator(res.result[0].operator);
+            console.log(res.result[0].operator);
             setSelectedCircle(res.result[0].circle);
             setloading(false);
             mounted = false;
@@ -178,6 +181,8 @@ const MobileRecharge = () => {
   };
 
   const handleViewPlans = () => {
+    console.log("hello");
+
     var selOpr = operatorList.filter((operator) => {
       if (operator.value === result.operator) {
         return operator;
@@ -187,7 +192,7 @@ const MobileRecharge = () => {
       var opr = selOpr[0];
       setOperatorId(opr.id);
     }
-    setOpen(true);
+
     let browsedata = {
       circle: result.circle,
       operator: result.operator,
@@ -195,20 +200,41 @@ const MobileRecharge = () => {
     };
 
     if (
-      browsedata.circle === undefined &&
-      browsedata.operator === undefined &&
-      browsedata.mobileNumber === ""
+      !/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
+        browsedata.mobileNumber
+      )
     ) {
       setValidate(false);
-      setMobileError("Please enter mobile number");
-      setOptError("Please select operator");
+      setMobileError("Please enter 10 digit mobile number");
+    }
+    if (browsedata.circle === undefined) {
+      setValidate(false);
       setCircleError("Please select cricle");
-    } else {
-      setValidate(true);
+    }
+    if (browsedata.operator === undefined) {
+      setOptError("Please select operator");
+      setValidate(false);
+    }
+    if (browsedata.mobileNumber === "") {
+      setMobileError("Please enter mobile number");
+      setValidate(false);
+    }
+
+    if (
+      /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
+        browsedata.mobileNumber
+      ) &&
+      browsedata.mobileNumber !== "" &&
+      browsedata.operator !== undefined &&
+      browsedata.operator !== undefined
+    ) {
       loader.classList.remove("d-none");
-      // message.innerHTML = `<h3>Geting View Plans</h3>`;
+      setValidate(true);
+      setOpen(true);
       browseplan(browsedata).then(
         (res) => {
+          console.log(res);
+          setAmountErr("");
           setMobileError("");
           loader.classList.add("d-none");
           setBrowseDataResponse(res.result);
@@ -249,21 +275,29 @@ const MobileRecharge = () => {
       rechargeplan: talkTimedesc,
       // servicecode: "SER_7",
     };
-
+    console.log(rechargeData);
+    if (
+      !/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-.]?([0-9]{4})$/.test(
+        rechargeData.mobileNumber
+      )
+    ) {
+      rechargeValidate = false;
+      setMobileError("Please enter 10 digit mobile number");
+    }
     if (rechargeData.mobileNumber === "") {
       rechargeValidate = false;
-      setMobileError("Please enter mobile number");
-      setOptError("Please select operator");
-      setCircleError("Please select circle");
-      setAmountErr("Please select amount");
+      setMobileError("Please Enter Mobile Number");
     }
-
+    if (rechargeData.mobileNumber < 10) {
+      rechargeValidate = false;
+      setMobileError("Please enter 10 digit mobile number");
+    }
     if (
       rechargeData.rechargeamount === undefined &&
       rechargeData.rechargeplan === undefined
     ) {
       rechargeValidate = false;
-      setAmountErr("Please select plan amount");
+      setAmountErr("Please select plan");
     }
 
     if (rechargeValidate) {
@@ -275,12 +309,11 @@ const MobileRecharge = () => {
 
       mobileReacharge(rechargeData).then(
         (res) => {
-          console.log(res);
+          console.log(res.message);
           if (res.status === 300) {
-            setModalOpen(true);
             setRechargeLoading(false);
             loader.classList.add("d-none");
-            swal("Please Try Later", res.message, "warning");
+            swal("Please Try Later", res?.message, "warning");
           }
           if (res.status === 200) {
             loader.classList.add("d-none");
@@ -392,14 +425,14 @@ const MobileRecharge = () => {
                   </div>
                   <input
                     type="text"
-                    className="form-control rounded-2"
+                    className="form-control rounded-start"
                     placeholder="Example:. 10"
                     value={amount}
                     aria-label="Recipient's username with two button addons"
                   />
                   <button
                     type="button"
-                    className="border-0 rounded-2 text-white"
+                    className="text-white  rounded-end "
                     style={{ backgroundColor: "#3d24f5" }}
                     onClick={handleViewPlans}
                   >
@@ -418,7 +451,7 @@ const MobileRecharge = () => {
                 </button>
                 {modalopen ? (
                   <>
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal show={show} className="center" onHide={handleClose}>
                       <Modal.Header closeButton>
                         <Modal.Title className="text-success">
                           Recharge Success!
@@ -427,17 +460,17 @@ const MobileRecharge = () => {
                       <Modal.Body>
                         <div className="container">
                           <div className="row">
-                            <p>{rechargeResult.message}</p>
+                            <p>{rechargeResult?.message}</p>
 
                             <p>
                               {" "}
                               <strong> Operator Id:</strong>{" "}
-                              {rechargeResult.operatorid}
+                              {rechargeResult?.operatorid}
                             </p>
 
                             <p>
                               <strong> Refference Id:</strong>{" "}
-                              {rechargeResult.refid}
+                              {rechargeResult?.refid}
                             </p>
                           </div>
                         </div>
@@ -456,7 +489,7 @@ const MobileRecharge = () => {
             </form>
           </div>
           <div className="col-lg-8">
-            {open && validate === true ? (
+            {open === true && validate === true ? (
               <div
                 className="card"
                 style={{

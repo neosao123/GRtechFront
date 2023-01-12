@@ -323,7 +323,11 @@ const Dth = () => {
                   </p>
                   {modalopen ? (
                     <>
-                      <Modal show={show} onHide={handleClose}>
+                      <Modal
+                        show={show}
+                        className="center"
+                        onHide={handleClose}
+                      >
                         <Modal.Header closeButton>
                           <Modal.Title className="text-success">
                             Recharge Success!

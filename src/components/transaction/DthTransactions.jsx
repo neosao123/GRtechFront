@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import swal from "sweetalert";
+import { retryDthRecharge } from "../../networkcalls/dthApi";
 import { dthTransactions } from "../../networkcalls/transactions";
 
 const DthTransactions = () => {
@@ -13,7 +15,26 @@ const DthTransactions = () => {
   const [totalRows, setTotalRows] = useState();
   const [perPage, setPerPage] = useState(10);
   let clientCode = sessionStorage.getItem("clientCode");
-
+  const handleRetryDth = (referenceid) => {
+    let rechargeData = {
+      referenceid: referenceid,
+      clientCode: clientCode,
+    };
+    console.log(rechargeData);
+    loader.classList.remove("d-none");
+    retryDthRecharge(rechargeData).then((res) => {
+      loader.classList.add("d-none");
+      if (res.status === 200) {
+        swal("Success", res.message, "success").then((ok) => {
+          if (ok) {
+            window.location.reload();
+          }
+        });
+      } else {
+        swal("Failed", res.message, "warning");
+      }
+    });
+  };
   const columns = [
     {
       name: "Reference Id",
@@ -41,7 +62,24 @@ const DthTransactions = () => {
     },
     {
       name: "Recharge Status",
-      selector: (row) => row.rechargestatus,
+      selector: (row) =>
+        row.rechargestatus === "success" ? (
+          <button
+            className="btn btn-sm btn-success"
+            onClick={(e) => handleRetryDth(row.referenceid)}
+          >
+            check status
+          </button>
+        ) : (
+          <>
+            <button
+              className="btn btn-sm btn-success"
+              onClick={(e) => handleRetryDth(row.referenceid)}
+            >
+              check status
+            </button>
+          </>
+        ),
     },
   ];
 
