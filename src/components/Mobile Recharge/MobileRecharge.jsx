@@ -58,7 +58,6 @@ const MobileRecharge = () => {
   const handleClose = () => {
     window.location.reload();
     setShow(false);
-    // window.location.reload();
   };
 
   const handleShow = (e) => {
@@ -66,7 +65,10 @@ const MobileRecharge = () => {
   };
 
   useEffect(() => {
+    const loader = document.querySelector("div.loader");
+    loader.classList.remove("d-none")
     getOprator().then((data) => {
+      loader.classList.add("d-none")
       //console.log(data.result.map((data) => data.image));
       var result = data?.result;
       console.log(result);
@@ -334,7 +336,7 @@ const MobileRecharge = () => {
 
   return (
     <div>
-      <div className="container" id="unloader" style={styles.container}>
+      <div className="container" id="unloader">
         <div className="row mt-3 mb-3 ms-1">
           <div className="col-md-6 col-6">
             <h4 className=" text-success">Prepaid Mobile Recharge</h4>
@@ -432,7 +434,7 @@ const MobileRecharge = () => {
                   />
                   <button
                     type="button"
-                    className="text-white  rounded-end "
+                    className="text-white rounded-end"
                     style={{ backgroundColor: "#3d24f5" }}
                     onClick={handleViewPlans}
                   >
@@ -461,15 +463,12 @@ const MobileRecharge = () => {
                         <div className="container">
                           <div className="row">
                             <p>{rechargeResult?.message}</p>
-
                             <p>
-                              {" "}
-                              <strong> Operator Id:</strong>{" "}
+                              <strong> Operator Id:</strong>
                               {rechargeResult?.operatorid}
                             </p>
-
                             <p>
-                              <strong> Refference Id:</strong>{" "}
+                              <strong> Refference Id:</strong>
                               {rechargeResult?.refid}
                             </p>
                           </div>

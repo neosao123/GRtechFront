@@ -1,6 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import Step1_Basic_Details from "./components/become a retailer/Step1_Basic_Details";
+import Step2_AdhaarDetails from "./components/become a retailer/Step2_AdhaarDetails";
+import Step3_BankDetails from "./components/become a retailer/Step3_BankDetails";
+import Step_4_VideoKYC from "./components/become a retailer/Step_4_VideoKYC";
 import BroadBand from "./components/BroadBand/BroadBand";
+import Complain from "./components/Complain/Complain";
 import Dth from "./components/DTH/Dth";
 // import Dummy from "./components/Dummy";
 import Electricity from "./components/electricity/Electricity";
@@ -152,6 +157,51 @@ function App() {
             <>
               <Header />
               <AllTransaction />
+            </>
+          }
+        />
+        <Route
+          path="/dashboard/complain"
+          element={
+            <>
+              <Header />
+              <Complain />
+            </>
+          }
+        />
+        <Route
+          path="/become_a_retailer/stepone"
+          element={
+            <>
+              <Header />
+              <Step1_Basic_Details />
+            </>
+          }
+        />
+        <Route
+          path="/become_a_retailer/steptwo"
+          element={
+            <>
+              <Header />
+              <Step2_AdhaarDetails />
+            </>
+          }
+        />
+        <Route
+          path="/become_a_retailer/stepthree"
+          element={
+            <>
+              <Header />
+              <Step3_BankDetails />
+            </>
+          }
+        />
+        <Route
+          path="/become_a_retailer/stepfour"
+          element={
+            <>
+              <Header />
+              <Step_4_VideoKYC />
             </>
           }
         />

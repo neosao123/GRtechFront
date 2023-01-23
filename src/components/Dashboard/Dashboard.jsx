@@ -3,7 +3,7 @@ import addmoney from "../../images/Add_Money/Group 5015.png";
 import transaction from "../../images/Trasanction/Group 5013.png";
 import complain from "../../images/Complain/Group 5014.png";
 import { BillPaymentServices } from "../pages/BillPaymentServices";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ModalSearch from "../../utils/ModalSearch";
 import {
   addclientwalletamount,
@@ -24,10 +24,13 @@ import Modal from "react-bootstrap/Modal";
 
 const Dashboard = () => {
   const loader = document.querySelector("div.loader");
+  let navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [amountErr, setAmountErr] = useState();
   const [amount, setAmount] = useState();
-
+  const [location, setLocation] = useState({});
+  sessionStorage.setItem("lat", location.lat);
+  sessionStorage.setItem("lng", location.lng);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   useEffect(() => {
@@ -60,7 +63,6 @@ const Dashboard = () => {
             ).then((res) => {
               if (res) {
                 window.location.reload();
-
                 setShow(false);
               }
             });
@@ -72,8 +74,17 @@ const Dashboard = () => {
       );
     }
   }
+  const getLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    });
+  };
 
   useEffect(() => {
+    getLocation();
     let data = {
       clientCode: clientCode,
     };
@@ -157,10 +168,10 @@ const Dashboard = () => {
                   <p>Transaction</p>
                 </div>
                 <div className="col-lg-4 col text-center">
-                  <Link>
+                  <Link to={"/dashboard/complain"}>
                     <img src={complain} alt="" /> <br />
                   </Link>
-                  <p>complain</p>
+                  <p>Complain</p>
                 </div>
               </div>
             </div>
@@ -191,32 +202,54 @@ const Dashboard = () => {
               </div>
 
               <div className="col-md-2 mb-4  col-4 col-lg-2 text-center layout">
-                <Link to="/electricity">
-                  <div className="border-light services-header rounded-2  image-div">
-                    <img className="pt-2 pb-2" src={Electricity} alt="icon" />
-                  </div>
-                </Link>
+                <div className="border-light services-header rounded-2  image-div">
+                  <img
+                    className="pt-2 pb-2"
+                    src={Electricity}
+                    alt="icon"
+                    onClick={() =>
+                      location.lat === undefined
+                        ? swal("Warning", "Please allow location", "warning")
+                        : navigate("/electricity")
+                    }
+                  />
+                </div>
+
                 <div className="mt-3" style={{ fontSize: "14px" }}>
                   Electricity
                 </div>
               </div>
               <div className="col-md-2 mb-4  col-4 col-lg-2 text-center layout">
-                <Link to="/gasbooking">
-                  <div className="border-light services-header rounded-2  image-div">
-                    <img className="pt-2 pb-2" src={GasBooking} alt="icon" />
-                  </div>
-                </Link>
+                <div className="border-light services-header rounded-2  image-div">
+                  <img
+                    className="pt-2 pb-2"
+                    src={GasBooking}
+                    alt="icon"
+                    onClick={() =>
+                      location.lat === undefined
+                        ? swal("Warning", "Please allow location", "warning")
+                        : navigate("/gasbooking")
+                    }
+                  />
+                </div>
 
                 <div className="mt-3" style={{ fontSize: "14px" }}>
-                  GasBooking
+                  Gas booking
                 </div>
               </div>
               <div className="col-md-2 mb-4  col-4 col-lg-2 text-center layout">
-                <Link to="lic">
-                  <div className="border-light services-header rounded-2  image-div">
-                    <img className="pt-2 pb-2" src={LIC} alt="icon" />
-                  </div>
-                </Link>
+                <div className="border-light services-header rounded-2  image-div">
+                  <img
+                    className="pt-2 pb-2"
+                    src={LIC}
+                    alt="icon"
+                    onClick={() =>
+                      location.lat === undefined
+                        ? swal("Warning", "Please allow location", "warning")
+                        : navigate("/lic")
+                    }
+                  />
+                </div>
                 <div className="mt-3" style={{ fontSize: "14px" }}>
                   LIC
                 </div>
@@ -232,9 +265,11 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="col-md-2 mb-4  col-4 col-lg-2 text-center layout">
-                <div className="border-light services-header rounded-2  image-div">
-                  <img className="pt-2 pb-2" src={Fastag} alt="icon" />
-                </div>
+                <Link to="/fastag">
+                  <div className="border-light services-header rounded-2  image-div">
+                    <img className="pt-2 pb-2" src={Fastag} alt="icon" />
+                  </div>
+                </Link>
                 <div className="mt-3" style={{ fontSize: "14px" }}>
                   Fastag
                 </div>
@@ -252,7 +287,7 @@ const Dashboard = () => {
                   <img className="pt-2 pb-2" src={Mobile} alt="icon" />
                 </div>
                 <div className="mt-3" style={{ fontSize: "14px" }}>
-                  Post Paid
+                  Post paid
                 </div>
               </div>
             </div>

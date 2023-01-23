@@ -13,7 +13,7 @@ import ViewPlans from "../Mobile Recharge/ViewPlans";
 import ViewDthPlans from "./ViewDthPlans";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const { Option } = components;
+const { Option } = components;  
 
 function IconOption(props) {
   const {
@@ -201,7 +201,7 @@ const Dth = () => {
               boxShadow: "#00000012 0pt 2pt 8pt",
               backgroundColor: "#FFFFFF",
             }}
-          >
+           > 
             <div className="mb-3">
               <label>Operator</label>
 
@@ -379,7 +379,7 @@ const Dth = () => {
                   boxShadow: "#00000012 0pt 2pt 8pt",
                   backgroundColor: "#FFFFFF",
                 }}
-              >
+               >
                 <div className="card-body">
                   <div className="row">
                     <h5 className="text-success">DTH Info</h5>

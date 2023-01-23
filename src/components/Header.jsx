@@ -97,7 +97,7 @@ const Header = () => {
           >
             <ul className="navbar-nav me-auto mb-lg-0">
               <li className="nav-item dropdown">
-                <Link className="nav-link" to="/dashboard">
+                <Link className="nav-link" id="navbarDropdown" to="/dashboard">
                   Dashboard
                 </Link>{" "}
               </li>
@@ -359,6 +359,16 @@ const Header = () => {
                     </Link>
                   </li>
                 </ul>
+              </li>
+              <li className="nav-item">
+                <Link
+                  to="/dashboard/complain"
+                  className="nav-link"
+                  role="button"
+                  id="navbarDropdown"
+                >
+                  Complains
+                </Link>
               </li>
             </ul>
             {/* <form className="d-flex">

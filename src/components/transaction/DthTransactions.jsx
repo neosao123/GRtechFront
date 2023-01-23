@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import { retryDthRecharge } from "../../networkcalls/dthApi";
 import { dthTransactions } from "../../networkcalls/transactions";
 
 const DthTransactions = () => {
+  let navigate = useNavigate();
   const loader = document.querySelector("div.loader");
   const [transactionData, setTransactionData] = useState();
   const [referenceId, setReferenceId] = useState("");
@@ -34,6 +36,9 @@ const DthTransactions = () => {
         swal("Failed", res.message, "warning");
       }
     });
+  };
+  const handleComplain = (e, referenceid) => {
+    navigate("/dashboard/complain", { state: { referenceId: referenceid } });
   };
   const columns = [
     {
@@ -64,12 +69,7 @@ const DthTransactions = () => {
       name: "Recharge Status",
       selector: (row) =>
         row.rechargestatus === "success" ? (
-          <button
-            className="btn btn-sm btn-success"
-            onClick={(e) => handleRetryDth(row.referenceid)}
-          >
-            check status
-          </button>
+          <span className="badge bg-success ">Success</span>
         ) : (
           <>
             <button
@@ -77,6 +77,30 @@ const DthTransactions = () => {
               onClick={(e) => handleRetryDth(row.referenceid)}
             >
               check status
+            </button>
+          </>
+        ),
+    },
+    {
+      name: "Raise Complain",
+      selector: (row) =>
+        row.rechargestatus === "success" ? (
+          <span className="badge bg-success ">Success</span>
+        ) : (
+          // <>
+          //   <button
+          //     className="btn btn-sm btn-success"
+          //     onClick={(e) => handleComplain(e, row.referenceid)}
+          //   >
+          //     Raise Complain{" "}
+          //   </button>
+          // </>
+          <>
+            <button
+              className="btn btn-sm btn-success"
+              onClick={(e) => handleComplain(e, row.referenceId)}
+            >
+              Raise Complain{" "}
             </button>
           </>
         ),

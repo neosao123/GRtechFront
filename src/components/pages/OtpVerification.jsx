@@ -34,10 +34,14 @@ const OtpVerification = () => {
     setLoading(true);
     await VerifyOtp(data).then(
       (res) => {
+        sessionStorage.setItem("email",res?.result?.email);
+        sessionStorage.setItem("clientType", res?.result?.clienttype);
         sessionStorage.setItem("clientCode", res?.result?.code);
         sessionStorage.setItem("panVerify", res?.result?.panVerify);
         sessionStorage.setItem("fullname", res?.result?.fullname);
-        JSON.stringify(sessionStorage.setItem("clientData", res.result));
+        console.log(
+          JSON.stringify(sessionStorage.setItem("clientData", res.result))
+        );
         let panVerify = sessionStorage.getItem("panVerify");
 
         if (res.status === 200) {

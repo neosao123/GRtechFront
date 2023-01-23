@@ -58,7 +58,7 @@ const ModalSearch = ({ BrowseDataResponse, dataFromSearch }) => {
           />
         </div>
         {/* <div className="pt-2">
-          
+        
         </div> */}
       </div>
 
